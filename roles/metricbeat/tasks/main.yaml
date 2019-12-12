@@ -1,0 +1,31 @@
+---
+#
+# Instaling and configuring MetricBeat
+#
+
+- name: Install metricbeat
+  yum:
+    name: metricbeat
+    state: present
+
+# - name: Enable modules apache and mysql
+#   shell: metricbeat modules enable apache mysql
+
+- name: Set elasticsearch output
+  lineinfile:
+      destfile: /etc/metricbeat/metricbeat.yml
+      regexp: 'output.elasticsearch:'
+      username:
+      password: 
+
+- name: Set kibana output
+  lineinfile:
+      destfile: /etc/metricbeat/metricbeat.yml
+      regexp: 'setup.kibana:'
+      line: 'host: "localhost:5601"'
+
+- name: Set logstash output
+  lineinfile:
+      destfile: /etc/metricbeat/metricbeat.yml
+      regexp: 'output.logstash:'
+      line: 'host: "localhost:5601"'

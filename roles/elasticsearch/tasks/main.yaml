@@ -29,11 +29,17 @@
       regexp: 'cluster.initial_master_nodes:'
       line: 'cluster.initial_master_nodes: ["127.0.0.1"]'
 
-- name: Updating the config file to set cluter node to -1
+- name: Updating the config file to set cluter node to IP
   lineinfile:
       destfile: /etc/elasticsearch/elasticsearch.yml
       regexp: 'xpack.monitoring.collection.enabled:'
       line: 'xpack.monitoring.collection.enabled: true'
+
+- name: Updating the config file to set cluter node to IP
+  lineinfile:
+      destfile: /etc/elasticsearch/elasticsearch.yml
+      regexp: 'xpack.security.enabled:'
+      line: 'xpack.security.enabled: true'
 
 # - name: Add port to firewall
 #   firewalld:

@@ -10,8 +10,8 @@
   - { role: java }
   - { role: elasticsearch }
   - { role: kibana }
-#  - { role: logstash }
-#  - { role: metricbeat }
+  - { role: logstash }
+  - { role: metricbeat }
 #  - { role: auditbeat }
 #  - { role: filebeat }
 #  - { role: packetbeat }
