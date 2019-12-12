@@ -1,0 +1,38 @@
+---
+#
+# Installing and configuring Kibana
+#
+
+- name: Install Kibana
+  yum:
+    name: kibana
+    state: present
+
+- name: Updating the config file to allow outside access
+  lineinfile:
+      destfile: /etc/kibana/kibana.yml
+      regexp: 'server.host:'
+      line: 'server.host: 0.0.0.0'
+- name: Updating the config file to set server.name
+  lineinfile:
+      destfile: /etc/kibana/kibana.yml
+      regexp: 'server.name:'
+      line: 'server.name: kibana.com-lab.local'
+- name: Updating the config file to set server.name
+  lineinfile:
+      destfile: /etc/kibana/kibana.yml
+      regexp: 'elasticsearch.hosts:'
+      line: 'elasticsearch.hosts: ["http://localhost:9200"]'
+
+- name: Add port to firewall
+  firewalld:
+     port: 5601/tcp
+     permanent: yes
+     immediate: yes
+     state: enabled
+
+- name: Starting Kibana
+  service: 
+     name: kibana
+     state: started
+     enabled: yes

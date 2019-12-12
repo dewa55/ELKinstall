@@ -1,0 +1,46 @@
+---
+#
+# Installing and configuring elasticsearch
+#
+
+- name: Addding repository for Elasticsearch
+  yum_repository:
+     name: Elasticsearch
+     description: Elasticsearch repository for 7.x packages
+     baseurl: https://artifacts.elastic.co/packages/7.x/yum
+     gpgcheck: yes
+     gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+     enabled: yes
+
+- name: Install Elasticsearch
+  yum:
+    name: elasticsearch
+    state: present
+
+# - name: Updating the config file to allow outside access
+#   lineinfile:
+#       destfile: /etc/elasticsearch/elasticsearch.yml
+#       regexp: 'network.host:'
+#       line: 'network.host: 0.0.0.0'
+
+- name: Updating the config file to set cluter node to -1
+  lineinfile:
+      destfile: /etc/elasticsearch/elasticsearch.yml
+      regexp: 'cluster.initial_master_nodes:'
+      line: 'cluster.initial_master_nodes: ["127.0.0.1"]'
+
+# - name: Add port to firewall
+#   firewalld:
+#     port: 9200/tcp
+#     permanent: yes
+#     immediate: yes
+#     state: enabled
+
+- name: Starting Elasticsearch
+  service: 
+     name: elasticsearch
+     state: started
+     enabled: yes
+      
+
+  

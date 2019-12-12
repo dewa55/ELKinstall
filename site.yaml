@@ -1,0 +1,18 @@
+---
+#
+# Install ELK stack
+#
+- hosts: elkservers
+  remote_user: root
+#  become: yes
+#  become_user: root
+  roles:
+  - { role: java }
+  - { role: elasticsearch }
+  - { role: kibana }
+#  - { role: logstash }
+#  - { role: metricbeat }
+#  - { role: auditbeat }
+#  - { role: filebeat }
+#  - { role: packetbeat }
+#  - { role: heartbeat }
