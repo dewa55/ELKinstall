@@ -2,3 +2,8 @@
 #
 # Installing and configuring LogStash
 #
+
+- name: Install logstash
+  yum:
+    name: logstash
+    state: present
