@@ -12,9 +12,8 @@
 #   shell: metricbeat modules enable apache mysql
 
 - name: Set elasticsearch output
-  lineinfile:
-      destfile: /etc/metricbeat/metricbeat.yml
-      regexp: 'output.elasticsearch:'
+  blockinfile:
+      path: /etc/metricbeat/metricbeat.yml
       username:
       password: 
 
