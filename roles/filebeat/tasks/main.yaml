@@ -1,0 +1,24 @@
+---
+#
+# Install and configure filebeat
+#
+
+- name: Install filebeat
+  yum:
+    name: filebeat
+    state: present
+
+- name: Set elasticsearch output
+  blockinfile:
+      path: /etc/filebeat/filebeat.yml
+      username:
+      password: 
+
+- name: Set logstash output
+  lineinfile:
+      destfile: /etc/filebeat/filebeat.yml
+      regexp: 'output.logstash:'
+      line: 'output.logstash:'
+  with_items:
+    - { regexp: 'output.logstash:', line: 'output.logstash:' }
+    - { regexp: 'hosts: ["localhost:5044"]', line: 'hosts: ["localhost:5044"]' }

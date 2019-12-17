@@ -27,4 +27,7 @@
   lineinfile:
       destfile: /etc/metricbeat/metricbeat.yml
       regexp: 'output.logstash:'
-      line: 'host: "localhost:5601"'
+      line: 'output.logstash:'
+  with_items:
+    - { regexp: 'output.logstash:', line: 'output.logstash:' }
+    - { regexp: 'hosts: ["localhost:5044"]', line: 'hosts: ["localhost:5044"]' }

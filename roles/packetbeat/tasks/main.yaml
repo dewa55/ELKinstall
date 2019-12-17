@@ -1,0 +1,35 @@
+---
+#
+# Install and confiure Packetbeat 
+#
+
+- name: Install packetbeat
+  yum:
+    name: packetbeat
+    state: present
+
+- name: Configure kibana output
+  lineinfile:
+      destfile: /etc/packetbeat/packetbeat.yaml
+      regexp: 'setup.kibana:'
+      line: 'host: "localhost:5601"'
+
+#-------------------------- Elasticsearch output ------------------------------
+#output.elasticsearch:
+  # Array of hosts to connect to.
+#  hosts: ["localhost:9200"]
+
+  # Optional protocol and basic auth credentials.
+  #protocol: "https"
+  #username: "elastic"
+  #password: "changeme"
+
+- name: Configure logstash
+  lineinfile: 
+      destfile: /etc/packetbeat/packetbeat.yaml
+      regexp: 'output.logstash:'
+      line: 'output.logstash:'
+  with_items:
+    - { regexp: 'output.logstash:', line: 'output.logstash:' }
+    - { regexp: 'hosts: ["localhost:5044"]', line: 'hosts: ["localhost:5044"]' }
+    
