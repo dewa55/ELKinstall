@@ -11,7 +11,7 @@
   - { role: elasticsearch }
   - { role: kibana }
   - { role: logstash }
-  - { role: metricbeat }
+#  - { role: metricbeat }
 #  - { role: auditbeat }
 #  - { role: filebeat }
 #  - { role: packetbeat }
