@@ -14,7 +14,7 @@
 - name: Set elasticsearch output
   blockinfile:
       path: /etc/metricbeat/metricbeat.yml
-      username:
+      username: kibana
       password: 
 
 - name: Set kibana output
