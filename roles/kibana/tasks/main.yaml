@@ -13,16 +13,37 @@
       destfile: /etc/kibana/kibana.yml
       regexp: 'server.host:'
       line: 'server.host: 0.0.0.0'
+
 - name: Updating the config file to set server.name
   lineinfile:
       destfile: /etc/kibana/kibana.yml
       regexp: 'server.name:'
       line: 'server.name: kibana.com-lab.local'
+
 - name: Updating the config file to set server.name
   lineinfile:
       destfile: /etc/kibana/kibana.yml
       regexp: 'elasticsearch.hosts:'
       line: 'elasticsearch.hosts: ["http://localhost:9200"]'
+
+- name: Generate passwords and save them to /tmp folder
+  shell: echo y | /usr/share/elasticsearch/bin/elasticsearch-setup-passwords auto  > /tmp/elkpassword.txt
+
+- name: Find password for kibana user
+  shell: cat /tmp/elkpassword.txt | grep kibana | awk '{print $4}' | tail -1
+  register: kibanapass
+  
+- name: Uncomment kibana username
+  lineinfile:
+    destfile: /etc/kibana/kibana.yml
+    regexp: 'elasticsearch.username:'
+    line:   'elasticsearch.username: "kibana"'
+    
+- name: Replace kibana password 
+  lineinfile:
+    destfile:   /etc/kibana/kibana.yml
+    regexp: 'elasticsearch.password:'
+    line: 'elasticsearch.password: "{{ kibanapass.stdout }}"'
 
 - name: Add port to firewall
   firewalld:
