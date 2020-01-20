@@ -8,26 +8,30 @@
     name: metricbeat
     state: present
 
-# - name: Enable modules apache and mysql
-#   shell: metricbeat modules enable apache mysql
+- name: Find password for elastic user
+  shell: cat /tmp/elkpassword.txt | grep elastic | awk '{print $4}' | tail -1
+  register: elasticpass
 
-- name: Set elasticsearch output
+- name: Configure connection
   blockinfile:
-      path: /etc/metricbeat/metricbeat.yml
-      username: kibana
-      password: 
+    path: /etc/metricbeat/metricbeat.yml
+    insertafter: "output.elasticsearch:"
+    block: |
+          hosts: ["http://localhost:9200"]
+          username: "elastic"
+          password: ""{{ elasticpass.stdout }}""
+          setup.kibana:
+          host: "http://localhost:5601"
 
-- name: Set kibana output
-  lineinfile:
-      destfile: /etc/metricbeat/metricbeat.yml
-      regexp: 'setup.kibana:'
-      line: 'host: "localhost:5601"'
 
-- name: Set logstash output
-  lineinfile:
-      destfile: /etc/metricbeat/metricbeat.yml
-      regexp: 'output.logstash:'
-      line: 'output.logstash:'
-  with_items:
-    - { regexp: 'output.logstash:', line: 'output.logstash:' }
-    - { regexp: 'hosts: ["localhost:5044"]', line: 'hosts: ["localhost:5044"]' }
+- name: Enable modules vsphere
+  shell: metricbeat modules enable vsphere
+
+- name: Metricbeat setup
+  shell: metricbeat setup
+
+- name: Starting metricbeat
+  service: 
+     name: metricbeat
+     state: started
+     enabled: yes
