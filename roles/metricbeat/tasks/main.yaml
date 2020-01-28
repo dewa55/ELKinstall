@@ -16,19 +16,33 @@
   blockinfile:
     path: /etc/metricbeat/metricbeat.yml
     insertafter: "output.elasticsearch:"
-    block: |
-          hosts: ["http://localhost:9200"]
-          username: "elastic"
-          password: ""{{ elasticpass.stdout }}""
-          setup.kibana:
-          host: "http://localhost:5601"
+    block: |2
+        username: "elastic"
+        password: "{{ elasticpass.stdout }}"
 
+- name: Configure connection kibana
+  lineinfile:
+      destfile: /etc/metricbeat/metricbeat.yml
+      regexp: '#host: "localhost:5601"'
+      line: '  host: "http://localhost:5601"'
+        
+
+- name: Configure vsphere plugin
+  lineinfile:
+    destfile: /etc/metricbeat/modules.d/vsphere.yml.disabled
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: 'hosts:', line: 'hosts: ["https://172.16.140.164/sdk"]' }
+    - { regexp: 'username', line: 'username: "administrator@vsphere.local"' }
+    - { regexp: 'password:', line: 'password: "CombisSecure123$"' }
+    - { regexp: 'insecure:', line: 'insecure: true' }
 
 - name: Enable modules vsphere
   shell: metricbeat modules enable vsphere
 
 - name: Metricbeat setup
-  shell: metricbeat setup
+  raw: metricbeat setup
 
 - name: Starting metricbeat
   service: 
