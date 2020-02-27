@@ -33,16 +33,21 @@
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
   with_items:
-    - { regexp: 'hosts:', line: 'hosts: ["https://172.16.140.164/sdk"]' }
-    - { regexp: 'username', line: 'username: "administrator@vsphere.local"' }
-    - { regexp: 'password:', line: 'password: "CombisSecure123$"' }
-    - { regexp: 'insecure:', line: 'insecure: true' }
+    - { regexp: '#metricsets:', line: '  metricsets:' }
+    - { regexp: '#  - datastore', line: '    - datastore' }
+    - { regexp: '#  - host', line: '    - host' }
+    - { regexp: '#  - virtualmachine', line: '    - virtualmachine' }
+    - { regexp: 'hosts:', line: '  hosts: ["https://172.16.140.164/sdk"]' }
+    - { regexp: 'username', line: '  username: "administrator@vsphere.local"' }
+    - { regexp: 'password:', line: '  password: "CombisSecure123$"' }
+    - { regexp: 'insecure:', line: '  insecure: true' }
 
 - name: Enable modules vsphere
   shell: metricbeat modules enable vsphere
 
 - name: Metricbeat setup
-  raw: metricbeat setup
+  raw: sudo metricbeat setup
+  ignore_errors: yes
 
 - name: Starting metricbeat
   service: 
